@@ -13,7 +13,7 @@ export default class LoginPage extends Component {
         e.preventDefault();
         let tokenData = await request.post(`https://enigmatic-springs-29291.herokuapp.com/auth/signin`, this.state)
         this.props.handleTokenChange(tokenData.body.token, tokenData.body.display_name)
-        this.props.history.push('./gamepage')
+        this.props.history.push('./gamepage') // is the . necessary here?
     }
     
     render() {
@@ -25,6 +25,7 @@ export default class LoginPage extends Component {
                 <form className='login-form' onSubmit={this.handleSubmit} >
                     <label>
                         Email:
+                        {/* nice inline event handlers! */}
                         <input onChange={ (e)=> this.setState({email: e.target.value}) } ></input>
                     </label>
                     <label>

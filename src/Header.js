@@ -7,6 +7,7 @@ export default class Header extends Component {
     }
     
     openNav = () => {
+        // cool! I assumed the sidebar came in from a library, so nice work rolling your own with such a smooth animation
         this.setState({
             width: 200
         })

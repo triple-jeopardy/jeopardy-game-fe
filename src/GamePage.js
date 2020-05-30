@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import request from 'superagent'
 
+const URL = 'https://jservice.io/api/random?count=1';
+
 export default class GamePage extends Component {
    state= {
         data: [],
@@ -16,13 +18,15 @@ export default class GamePage extends Component {
    }
 
    componentDidMount = async() => {
-        let data = await request.get(`https://jservice.io/api/random?count=1`)
+        let data = await request.get(URL)
         const removeSpecialRegex = /<[^>]*>/g
 
+        // nice data wrangling, I always get nervous when I see `body[0].question` kind of things without some sanity checking: `body && bodybody.length && body[0].question`
         while(data.body[0].question === ''){
-            data = await request.get(`https://jservice.io/api/random?count=1`)
+            data = await request.get(URL)
         }
 
+        // this could use some comments, or at least a well-named function, to give future devs an idea of what's going on here
         if(data.body[0].answer.includes('<')){
           data.body[0].answer = data.body[0].answer.replace(removeSpecialRegex, "")
         }
@@ -34,6 +38,7 @@ export default class GamePage extends Component {
         })
    }
 
+   // would like some comments here explaining your reasoning for future devs
    checkAnswer = (userInput, answer) => {
        let rightAnswer = true;
        const regexSpecial = /[^\w\s/']/g;
@@ -83,10 +88,10 @@ export default class GamePage extends Component {
    }
 
    handleClick = async() => {
-    let data = await request.get(`https://jservice.io/api/random?count=1`)
+    let data = await request.get(URL)
     const removeSpecialRegex = /<[^>]*>/g
     while(data.body[0].question === ''){
-        data = await request.get(`https://jservice.io/api/random?count=1`)
+        data = await request.get(URL)
     }
 
     if(data.body[0].answer.includes('<')){
@@ -128,7 +133,7 @@ export default class GamePage extends Component {
                 {this.state.answeredWrong && <p>Tough break, you got it wrong!
                     The answer was {this.state.data.answer}</p>}
             </div>
-                {(this.state.inputForm) 
+                {this.state.inputForm
                 ? 
                 <form onSubmit={this.handleSubmit}>
                     <div className='question-box'>
@@ -141,6 +146,7 @@ export default class GamePage extends Component {
                     </label>
                     <button className="game-page-button">Answer</button>
                 </form>
+                // ooo, nested ternaries. I find them hard to read, but they do the trick!
                 :  
                 this.state.questionsRemaining > 0 
                 ? 
